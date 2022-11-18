@@ -1,0 +1,51 @@
+- hosts: localhost
+  gather_facts: False
+  vars:
+    _instance:
+      name: vmwarelinuxtest
+      template: rhel86-tpl
+      rootfs_size: 20
+  tasks:
+  - name: Create instance(s) "{{ _instance.name }}"
+    register: r_vmc_instance
+    vars:
+      _instance_name: "{{ _instance.name }}"
+      _instance_userdata: |-
+        #cloud-config
+        chpasswd:
+          list: |
+            root:r3dh4t1!
+          expire: False
+        ssh_authorized_keys: 
+        - {{ ssh_key_pub }}
+
+    community.vmware.vmware_guest:
+      state: present
+      folder: "/Workloads/{{env_type}}-{{ guid }}"
+      template: "{{ _instance.template }}"
+      name: "{{ _instance.name }}"
+      wait_for_ip_address: True
+      disk:
+        - datastore: "{{ vcenter_datastore }}"
+          size_gb: "{{ _instance.rootfs_size }}"
+          type: "thin"
+      networks:
+        - name: "segment-{{ env_type }}-{{ guid }}"
+      advanced_settings:
+        - key: "guestinfo.metadata"
+          value: ""
+        - key: "guestinfo.metadata.encoding"
+          value: "base64"
+        - key: "guestinfo.userdata"
+          value: "{{ _instance_userdata | b64encode }}"
+        - key: "guestinfo.userdata.encoding"
+          value: "base64"
+
+  - name: Restart VM after create it
+    community.vmware.vmware_guest:
+      folder: "/Workloads/{{env_type}}-{{ guid }}"
+      state: rebootguest
+      wait_for_ip_address: True
+      name: "{{ _instance.name }}"
+
+
