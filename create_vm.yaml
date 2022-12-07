@@ -24,7 +24,7 @@
     community.vmware.vmware_guest:
       state: present
       folder: "/Workloads/{{env_type}}-{{ guid }}"
-      template: "/Templates/{{ _instance.template }}"
+      template: "{{ _instance.template }}"
       name: "{{ _instance.name }}"
       wait_for_ip_address: True
       datacenter: "{{ vcenter_datacenter }}"
