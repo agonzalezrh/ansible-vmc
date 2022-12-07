@@ -19,12 +19,12 @@
         ssh_authorized_keys: 
         - {{ ssh_key_pub }}
 
-    community.vmware.vmware_guest:
+    community.vmware.vmware_content_deploy_template:
       state: present
       folder: "/Workloads/{{env_type}}-{{ guid }}"
       template: "{{ _instance.template }}"
       name: "{{ _instance.name }}"
-      wait_for_ip_address: True
+      content_library: "ISOs_Templates" #TODO
       datacenter: "{{ vcenter_datacenter }}"
       disk:
         - datastore: "{{ vcenter_datastore }}"
