@@ -1,0 +1,4 @@
+- hosts: vmwarelinuxtest
+  gather_facts: False
+  tasks:
+  - ping:
