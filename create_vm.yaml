@@ -17,6 +17,7 @@
           list: |
             root:r3dh4t1!
           expire: False
+        ssh_pwauth: True
         ssh_authorized_keys: 
         - {{ ssh_key_pub }}
 
