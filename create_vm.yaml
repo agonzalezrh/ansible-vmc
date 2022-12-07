@@ -25,6 +25,7 @@
       template: "{{ _instance.template }}"
       name: "{{ _instance.name }}"
       wait_for_ip_address: True
+      datacenter: "{{ vcenter_datacenter }}"
       disk:
         - datastore: "{{ vcenter_datastore }}"
           size_gb: "{{ _instance.rootfs_size }}"
@@ -46,6 +47,7 @@
       folder: "/Workloads/{{env_type}}-{{ guid }}"
       state: rebootguest
       wait_for_ip_address: True
+      datacenter: "{{ vcenter_datacenter }}"
       name: "{{ _instance.name }}"
 
 
