@@ -7,6 +7,16 @@
       rootfs_size: 20
   tasks:
   - name: Create instance(s) "{{ _instance.name }}"
+    community.vmware.vmware_content_deploy_template:
+      state: present
+      folder: "/Workloads/{{env_type}}-{{ guid }}"
+      template: "{{ _instance.template }}"
+      name: "{{ _instance.name }}"
+      content_library: "ISOs_Templates" #TODO
+      datacenter: "{{ vcenter_datacenter }}"
+
+
+  - name: Configure instance(s) "{{ _instance.name }}"
     register: r_vmc_instance
     vars:
       _instance_name: "{{ _instance.name }}"
@@ -18,14 +28,6 @@
           expire: False
         ssh_authorized_keys: 
         - {{ ssh_key_pub }}
-
-    community.vmware.vmware_content_deploy_template:
-      state: present
-      folder: "/Workloads/{{env_type}}-{{ guid }}"
-      template: "{{ _instance.template }}"
-      name: "{{ _instance.name }}"
-      content_library: "ISOs_Templates" #TODO
-      datacenter: "{{ vcenter_datacenter }}"
 
           
     community.vmware.vmware_guest:
@@ -58,5 +60,3 @@
       wait_for_ip_address: True
       datacenter: "{{ vcenter_datacenter }}"
       name: "{{ _instance.name }}"
-
-
