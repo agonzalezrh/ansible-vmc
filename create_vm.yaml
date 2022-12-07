@@ -26,6 +26,15 @@
       name: "{{ _instance.name }}"
       content_library: "ISOs_Templates" #TODO
       datacenter: "{{ vcenter_datacenter }}"
+
+          
+    community.vmware.vmware_guest:
+      state: present
+      folder: "/Workloads/{{env_type}}-{{ guid }}"
+      template: "{{ _instance.template }}"
+      name: "{{ _instance.name }}"
+      wait_for_ip_address: True
+      datacenter: "{{ vcenter_datacenter }}"
       disk:
         - datastore: "{{ vcenter_datastore }}"
           size_gb: "{{ _instance.rootfs_size }}"
@@ -40,7 +49,7 @@
         - key: "guestinfo.userdata"
           value: "{{ _instance_userdata | b64encode }}"
         - key: "guestinfo.userdata.encoding"
-          value: "base64"
+          value: "base64"          
 
   - name: Restart VM after create it
     community.vmware.vmware_guest:
